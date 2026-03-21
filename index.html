@@ -288,6 +288,8 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--text);m
 .sync-saved{border-color:#22c55e!important;color:#16a34a!important}
 .sync-error{border-color:#ef4444!important;color:#dc2626!important}
 @keyframes sync-pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+/* -- BOTTOM UTILITY BAR -- */
+.bottom-bar{display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;padding:1.2rem 1.5rem 2rem;border-top:1px solid var(--border);margin-top:2rem;background:linear-gradient(0deg,var(--cream) 60%,transparent);}
 .del-btn{position:absolute;top:8px;left:9px}
 .del-btn button{background:rgba(255,255,255,0.88);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);box-shadow:0 1px 5px rgba(0,0,0,0.12);transition:all 0.15s}
 .del-btn button:hover{transform:scale(1.2);background:#fee2e2}
@@ -418,7 +420,7 @@ const EMOJIS_LIST=['🍽️','🍝','🍗','🥗','🍰','🥞','🍮','🥧','�
 const STORAGE_KEY='family_cookbook_custom_v5';
 const RATINGS_KEY='family_cookbook_ratings_v1';
 const SYNC_CONFIG_KEY='family_cookbook_sync_v1';
-const DEFAULT_SYNC_CONFIG={"gistId": "ee9575a401dcca72d8beb8b1145e32ff", "token": "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"}; /* baked at build time */
+const DEFAULT_SYNC_CONFIG={"gistId": "ee9575a401dcca72d8beb8b1145e32ff", "token": "ghp_nhctNvp3MztbpPCXP16ZY0uHWxbC0r485nZA"}; /* baked at build time */
 const INITIAL_CUSTOM=[
   {
     "id": 1773987959392,
@@ -2141,7 +2143,7 @@ function Card({recipe,lang,t,fav,onFav,onClick,q,isCustom,onDelete,ratings}){
         <PhotoImg url={recipe.photo} emoji={recipe.emoji} cat={recipe.category}
           className="card-photo" style={{}}/>
         <div className="card-emoji-badge">{recipe.emoji}</div>
-        {isCustom&&(
+        {isCustom&&onDelete&&(
           <div className="del-btn">
             <button onClick={e=>{e.stopPropagation();if(window.confirm(t.del_confirm))onDelete(recipe.id);}}>🗑️</button>
           </div>
@@ -2527,15 +2529,7 @@ function App(){
             ❤️ {t.btn_favs}{favs.size>0?' ('+favs.size+')':''}
           </button>
           <button className="add-btn-ctrl" onClick={()=>setShowAdd(true)}>{t.btn_add}</button>
-          <div className="io-bar">
-            <button className="io-btn save-full" onClick={downloadComplete} title={lang==='fr'?"Télécharger fichier HTML complet":'Download complete HTML file'}>💾 {lang==='fr'?'Sauvegarder':'Save'}</button>
-            <button className="io-btn export" onClick={exportRecipes}>{t.export_btn}</button>
-            <button className="io-btn import" onClick={()=>importRef.current&&importRef.current.click()}>{t.import_btn}</button>
-            <button className={`io-btn sync-btn ${syncBadge.cls}`} onClick={()=>setShowSyncSetup(true)} title={syncBadge.label}>
-              {syncBadge.icon} Sync
-            </button>
-            <input ref={importRef} type="file" accept=".json" style={{display:'none'}} onChange={importRecipes}/>
-          </div>
+          <input ref={importRef} type="file" accept=".json" style={{display:'none'}} onChange={importRecipes}/>
         </div>
         <div className="ctrl-r2">
           {[{id:'all'},{id:'plats'},{id:'entrees'},{id:'salades'},{id:'desserts'}].map(c=>(
@@ -2563,7 +2557,7 @@ function App(){
           {filtered.map(r=>(
             <Card key={r.id} recipe={r} lang={lang} t={t} fav={favs.has(r.id)}
               onFav={toggleFav} onClick={()=>setSelected(r)} q={search}
-              isCustom={!!r.custom} onDelete={deleteRecipe}
+              isCustom={!!r.custom}
               ratings={ratings[r.id]||r.ratings||{}}/>
           ))}
         </div>
@@ -2590,6 +2584,16 @@ function App(){
         <SyncSetupModal lang={lang} onClose={()=>setShowSyncSetup(false)}
           onSaved={cfg=>{setSyncConfig(cfg);skipSaveRef.current=true;}}/>
       )}
+
+      {/* ── Bottom utility bar ── */}
+      <div className="bottom-bar">
+        <button className="io-btn save-full" onClick={downloadComplete} title={lang==='fr'?"Télécharger fichier HTML complet":'Download complete HTML file'}>💾 {lang==='fr'?'Sauvegarder':'Save'}</button>
+        <button className="io-btn export" onClick={exportRecipes}>{t.export_btn}</button>
+        <button className="io-btn import" onClick={()=>importRef.current&&importRef.current.click()}>{t.import_btn}</button>
+        <button className={`io-btn sync-btn ${syncBadge.cls}`} onClick={()=>setShowSyncSetup(true)} title={syncBadge.label}>
+          {syncBadge.icon} Sync
+        </button>
+      </div>
     </div>
   );
 }
