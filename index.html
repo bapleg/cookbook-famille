@@ -420,7 +420,7 @@ const EMOJIS_LIST=['🍽️','🍝','🍗','🥗','🍰','🥞','🍮','🥧','�
 const STORAGE_KEY='family_cookbook_custom_v5';
 const RATINGS_KEY='family_cookbook_ratings_v1';
 const SYNC_CONFIG_KEY='family_cookbook_sync_v1';
-const DEFAULT_SYNC_CONFIG={"gistId": "ee9575a401dcca72d8beb8b1145e32ff", "token": atob("Z2hwX3l2Z1dDZkwyb1A0R2dVNGNvc2pJa3k4UllKeHQxRTBNYXExaA==")}; /* baked at build time */
+const DEFAULT_SYNC_CONFIG={"gistId": "ee9575a401dcca72d8beb8b1145e32ff", "token": atob("Z2hwX0t5RzNyVHRxWDNyUkp2NGN1clNiNjFuSmxFU2cyWjN0OGwyVA==")}; /* baked at build time */
 const INITIAL_CUSTOM=[
   {
     "id": 1773987959392,
@@ -2323,7 +2323,7 @@ function App(){
       saveToGist(syncConfig,customRecipes,ratings)
         .then(()=>setSyncStatus('saved'))
         .catch(()=>setSyncStatus('error'));
-    },2000);
+    },500);
   },[customRecipes,ratings,syncReady,syncConfig]);
 
   const customIds=React.useMemo(()=>new Set(customRecipes.map(r=>r.id)),[customRecipes]);
